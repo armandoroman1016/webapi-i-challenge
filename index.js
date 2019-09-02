@@ -10,6 +10,7 @@ server.get('/', (req, res) => {
     res.send('success')
 })
 
+// ? gets all users
 server.get('/users', (req, res) => {
     Users.find()
     .then( users => {
@@ -20,6 +21,24 @@ server.get('/users', (req, res) => {
     })
 })
 
+//? gets user by id
+
+server.get('/users/:id', (req, res) => {
+    const { id } = req.params
+        Users.findById(id)
+        .then( user => {
+            if(user){
+                res.status(200).json(user)
+            }else{
+                res.status(404).json({message: "The user with the specified ID does not exist.", user: user})
+            }
+        })
+        .catch( err => {
+            res.status(500).json({error: "The user information could not be retrieved.", err: err})
+        })
+})
+
+// ? creates new user
 server.post('/users', (req, res) =>{
     const newUser = req.body
     if(!newUser.name || !newUser.bio){
