@@ -52,6 +52,19 @@ server.post('/users', (req, res) =>{
     }
 })
 
+//? deletes user
+
+server.delete('/users/:id', ( req, res ) => {
+    const { id } = req.params
+    Users.remove(id)
+        .then(results => {
+            if(results){
+                res.status(200).json({ message: "Delete successful." })
+            }else{
+                res.status(404).json({message: "The user with the specified ID does not exist." })
+            }})
+        .catch(err => res.status(500).json({message:'Error deleting user'}))
+})
 const port = 8000
 
 server.listen(port, () => console.log(`\nserver listening on port ${port}\n`))
