@@ -65,6 +65,27 @@ server.delete('/users/:id', ( req, res ) => {
             }})
         .catch(err => res.status(500).json({message:'Error deleting user'}))
 })
+
+//? updates user
+
+server.put('/users/:id', (req, res) =>{
+    const { id } = req.params
+    const userInfo = req.body
+    if(!userInfo.name || !userInfo.bio){
+        res.status(400).json({ errorMessage: "Please provide name and bio for the user." })
+    }else{
+        Users.update(id, userInfo)
+            .then( updatedUser => {
+                if(updatedUser){
+                    res.status(200).json(updatedUser)
+                }else{
+                    res.status(404).json({ error: "The user could not be removed" })
+                }
+            })
+            .catch( err => res.status(500).json({ error: "The user information could not be modified."}))
+    }
+    }
+)
 const port = 8000
 
 server.listen(port, () => console.log(`\nserver listening on port ${port}\n`))
